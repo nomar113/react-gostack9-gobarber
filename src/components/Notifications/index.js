@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 
 import { MdNotifications } from 'react-icons/md';
 
@@ -11,74 +11,35 @@ import {
 } from './styles';
 
 export default function Notifications() {
+  const [visible, setVisible] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  const hasUnread = useMemo(
+    () => !!notifications.find(notification => notification.read === false),
+    [notifications]
+  );
+
+  function handleToggleVisible() {
+    setVisible(!visible);
+  }
+
   return (
     <Container>
-      <Badge hasUnread>
+      <Badge onClick={handleToggleVisible} hasUnread={hasUnread}>
         <MdNotifications color="#7159c2" size={20} />
       </Badge>
 
-      <NotificationList>
+      <NotificationList visible={visible}>
         <Scroll>
-          <Notification unread>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification unread>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification unread>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification unread>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
-          <Notification>
-            <p>Você realizou uma reserva</p>
-            <time>há 2 dias</time>
-            <button type="button">Marcar como lida</button>
-          </Notification>
+          {notifications.map(notification => (
+            <Notification key={notification._id} unread={!notification.read}>
+              <p>{notification.content}</p>
+              <time>{notification.distanceDate}</time>
+              {!notification.read && (
+                <button type="button">Marcar como lida</button>
+              )}
+            </Notification>
+          ))}
         </Scroll>
       </NotificationList>
     </Container>
